@@ -15,6 +15,44 @@ The following instructions have been tested on **Ubuntu 16.04**. Similar
 instructions should work for other Linux distributions.
 
 1. Install GPD. You can follow [these instructions](https://github.com/atenpas/gpd#install). Make sure to run `make install` to install GPD as a library.
+   1.1 Requirements
+
+   1. [PCL 1.9 or newer](http://pointclouds.org/)
+   2. [Eigen 3.0 or newer](https://eigen.tuxfamily.org)
+   3. [OpenCV 3.4 or newer](https://opencv.org)
+
+   1.2 Installation
+
+   The following instructions have been tested on **Ubuntu 16.04**. Similar
+   instructions should work for other Linux distributions.
+
+   1.2.1. Install [PCL](http://pointclouds.org/) and
+   [Eigen](https://eigen.tuxfamily.org). If you have ROS Indigo or Kinetic
+   installed, you should be good to go.
+
+   1.2.2. Install OpenCV 3.4 ([tutorial](https://www.python36.com/how-to-install-opencv340-on-ubuntu1604/)).
+
+   1.2.3. Clone the repository into some folder:
+
+   ```
+   git clone https://github.com/atenpas/gpd
+   ```
+
+   1.2.4. Build the package:
+
+   ```
+   cd gpd
+   mkdir build && cd build
+   cmake ..
+   make -j
+   sudo make install
+   ```
+
+   You can optionally install GPD with `sudo make install` so that it can be used by other projects as a shared library.
+
+   If building the package does not work, try to modify the compiler flags, `CMAKE_CXX_FLAGS`, in the file CMakeLists.txt.
+
+   1.3 You'll need to change path in [line 32](https://github.com/atenpas/gpd/blob/6327f20eabfcba41a05fdd2e2ba408153dc2e958/cfg/ros_eigen_params.cfg#L32) 
 
 2. Clone this repository into the `src` folder of your catkin workspace:
 
@@ -27,7 +65,7 @@ instructions should work for other Linux distributions.
 
    ```
    cd <location_of_your_workspace>
-   catkin_make
+   catkin build
    ```
 
 ## 2) Generate Grasps for a Point Cloud on a ROS Topic
@@ -46,6 +84,10 @@ cloud is received, the node will search the cloud for grasps.
 
 ```
 roslaunch gpd_ros ur5.launch
+```
+Call service to get grasps poses
+```
+rosservice call /detect_grasps/detect_grasps_poses "{}"
 ```
 
 ## 3) Using Advanced Messages
