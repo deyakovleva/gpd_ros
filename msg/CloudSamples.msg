@@ -2,6 +2,7 @@
 # detector should search for grasp candidates.
 
 # The point cloud.
+# gpd_ros/CloudSources cloud_sources
 gpd_ros/CloudSources cloud_sources
 
 # The samples, as (x,y,z) points, at which to search for grasp candidates. 

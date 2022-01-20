@@ -47,10 +47,13 @@
 
 // this project (services)
 #include <gpd_ros/detect_grasps.h>
+#include <gpd_ros/detect_grasps_poses.h>
 
 // this project (messages)
 #include <gpd_ros/GraspConfig.h>
+#include <gpd_ros/GraspConfigGeomPose.h>
 #include <gpd_ros/GraspConfigList.h>
+#include <gpd_ros/GraspConfigListPose.h>
 
 // this project (headers)
 #include <gpd_ros/grasp_messages.h>
@@ -85,11 +88,13 @@ public:
    * \param res the service response
    */
   bool detectGrasps(gpd_ros::detect_grasps::Request& req, gpd_ros::detect_grasps::Response& res);
+  bool detectGraspsPose(gpd_ros::detect_grasps_poses::Request& req, gpd_ros::detect_grasps_poses::Response& res);
 
 
 private:
 
   ros::Publisher grasps_pub_; ///< ROS publisher for grasp list messages
+  ros::Publisher grasps_pub_pose_; ///< ROS publisher for geometry_pose
 
   std_msgs::Header cloud_camera_header_; ///< stores header of the point cloud
   std::string frame_; ///< point cloud frame

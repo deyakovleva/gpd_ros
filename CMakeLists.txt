@@ -29,10 +29,11 @@ set(CMAKE_CXX_FLAGS "-O3 -fopenmp -fPIC -Wno-deprecated -Wenum-compare -Wno-igno
 
 ## Generate messages in the 'msg' folder
 add_message_files(FILES CloudIndexed.msg CloudSamples.msg CloudSources.msg GraspConfig.msg GraspConfigList.msg
-  SamplesMsg.msg)
+  SamplesMsg.msg GraspConfigGeomPose.msg GraspConfigListPose.msg)
 
 ## Generate services in the 'srv' folder
 add_service_files(FILES detect_grasps.srv)
+add_service_files(FILES detect_grasps_poses.srv)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(DEPENDENCIES geometry_msgs sensor_msgs std_msgs)

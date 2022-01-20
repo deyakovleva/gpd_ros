@@ -60,8 +60,11 @@
 #include <gpd_ros/CloudSamples.h>
 #include <gpd_ros/CloudSources.h>
 #include <gpd_ros/GraspConfig.h>
+#include <gpd_ros/GraspConfigGeomPose.h>
 #include <gpd_ros/GraspConfigList.h>
+#include <gpd_ros/GraspConfigListPose.h>
 #include <gpd_ros/SamplesMsg.h>
+#include <gpd_ros/detect_grasps_poses.h>
 
 // this project (headers)
 #include <gpd_ros/grasp_messages.h>
@@ -107,8 +110,9 @@ public:
    * \brief Detect grasp poses in a point cloud received from a ROS topic.
    * \return the list of grasp poses
   */
-  std::vector<std::unique_ptr<gpd::candidate::Hand>> detectGraspPoses();
+  void detectGraspPoses();
 
+  bool detectGraspsPose(gpd_ros::detect_grasps_poses::Request &req, gpd_ros::detect_grasps_poses::Response &res);
 
 private:
 
@@ -151,6 +155,8 @@ private:
   */
   void samples_callback(const gpd_ros::SamplesMsg& msg);
 
+
+
   Eigen::Matrix3Xd fillMatrixFromFile(const std::string& filename, int num_normals);
 
   Eigen::Vector3d view_point_; ///< (input) view point of the camera onto the point cloud
@@ -159,12 +165,15 @@ private:
   std_msgs::Header cloud_camera_header_; ///< stores header of the point cloud
 
   int size_left_cloud_; ///< (input) size of the left point cloud (when using two point clouds as input)
-  bool has_cloud_, has_normals_, has_samples_; ///< status variables for received (input) messages
+  bool has_cloud_, has_normals_, has_samples_, has_service_; ///< status variables for received (input) messages
   std::string frame_; ///< point cloud frame
   ros::Subscriber cloud_sub_; ///< ROS subscriber for point cloud messages
   ros::Subscriber samples_sub_; ///< ROS subscriber for samples messages
   ros::Publisher grasps_pub_; ///< ROS publisher for grasp list messages
+  ros::Publisher grasps_pub_pose_; ///< ROS publisher for geometry_pose
   ros::Publisher grasps_rviz_pub_; ///< ROS publisher for grasps in rviz (visualization)
+  ros::ServiceServer service_response_; /// ROS service for poses list
+  gpd_ros::GraspConfigListPose selected_grasps_poses_msg_;
 
   bool use_importance_sampling_; ///< if importance sampling is used
   bool use_rviz_; ///< if rviz is used for visualization instead of PCL
@@ -173,6 +182,7 @@ private:
   gpd::GraspDetector* grasp_detector_; ///< used to run the GPD algorithm
 //gpd::SequentialImportanceSampling* importance_sampling_; ///< sequential importance sampling variation of GPD algorithm
   GraspPlotter* rviz_plotter_; ///< used to plot detected grasps in rviz
+  std::vector<std::unique_ptr<gpd::candidate::Hand>> poses_;
 
   /** constants for input point cloud types */
   static const int POINT_CLOUD_2; ///< sensor_msgs/PointCloud2
